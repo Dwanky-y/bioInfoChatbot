@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 // Should have a text field and a enter button
-function UserChatBox() {
+function UserChatBox({ onSend }) {
 
     const [text, setText] = useState('')
 
@@ -8,6 +8,10 @@ function UserChatBox() {
     const sendMessage = () => {
         console.log("Sending Message: ", text)
         //API call to LLM here??
+
+        if (onSend) {
+            onSend(text)
+        }
         setText('')
     }
 
