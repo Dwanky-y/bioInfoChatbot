@@ -1,24 +1,24 @@
 import React, { useState } from "react"
 
-function AIOutPutBox() {
+function AIOutPutBox({ aiText }) {
 
-    const [aiText, setAiText] = useState('')
+    // const [aiText, setAiText] = useState('')
 
     const displayAIOutput = (message) => {
-        let typingSpeed = 25; // typing speed in milliseconds
-        let typedMessage = ''
-        let index = 0
+    //     let typingSpeed = 25; // typing speed in milliseconds
+    //     let typedMessage = ''
+    //     let index = 0
 
-        const typeLetter = () => {
-            if (index < message.length) {
-                typedMessage += message[index]
-                setAiText(typedMessage)
-                index++
-                setTimeout(typeLetter, typingSpeed)
-            }
-        }
+    //     const typeLetter = () => {
+    //         if (index < message.length) {
+    //             typedMessage += message[index]
+    //             setAiText(typedMessage)
+    //             index++
+    //             setTimeout(typeLetter, typingSpeed)
+    //         }
+    //     }
 
-        typeLetter()
+    //     typeLetter()
     }
 
     return <>
