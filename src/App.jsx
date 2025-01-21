@@ -8,17 +8,17 @@ function App(){
   document.title = "Bio Info Bot" //Changes web name
   
   const [chatHistory, setChatHistory] = useState([
-    ChatHistory({didUserWrite : true, text : "Hello World!"}),
-    ChatHistory({didUserWrite : false, text : "Hello User!"})
+    {didUserWrite: true, text: "Hello Ai!"},
+    {didUserWrite: false, text: "Hello User!"}
   ])
 
   const handleUserInput = (message) => {
 
     console.log("Recevied! User has sent: ", message)
-    setChatHistory( (prevArray) => {
-      prevArray,
-      chatHistory({didUserWrite : true, text : message})
-    })
+    setChatHistory( (prevArray) => [
+      ...prevArray,
+      {didUserWrite : true, text : message}
+    ])
   }
 
 
@@ -26,7 +26,9 @@ function App(){
   
   <div> {/* Chat History*/}
     <h2>Chat History</h2>
-    {chatHistory}
+    {chatHistory.map((entry, index) => (
+      <ChatHistory key={index} didUserWrite={entry.didUserWrite} text={entry.text}/>
+    ))}
     
     
   </div>
