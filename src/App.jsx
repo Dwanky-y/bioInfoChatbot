@@ -3,7 +3,6 @@ import AIOutPutBox from "./AIOutputBox";
 import UserChatBox from "./UserChatBox";
 import ChatHistory from "./chatHistory";
 import "./App.css";
-import Groq from "groq-sdk";
 import { getGroqChatCompletion } from './GROQAI.js';
 import { useEffect, useState } from "react";
 
@@ -11,7 +10,7 @@ import { useEffect, useState } from "react";
 // const groq = new Groq({dangerouslyAllowBrowser: true, apiKey: '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'})
 //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
 
-const AI_RESPONSE = await getGroqChatCompletion("Help the user with the website 'Data Moneky' however you are not finished yet");
+const AI_RESPONSE = await getGroqChatCompletion("Help the user with the website 'Data Monkey' however you are not finished yet");
 function App(){
   // console.log(AI_RESPONSE.choices[0]?.message?.content || "")
   document.title = "Bio Info Bot" //Changes web name
@@ -24,14 +23,16 @@ function App(){
 
   const handleUserInput = async (message) => {
     const date = new Date()
+    console.log(date.getMinutes())
     console.log("Recevied! User has sent: ", message)
     
     const AI_RESPONSE = await getGroqChatCompletion(message);
+    const AI_MESSAGE = AI_RESPONSE.choices[0]?.message?.content || ""
 
     setChatHistory( (prevArray) => [
       ...prevArray,
       {didUserWrite : true, text : message, hours: date.getHours(), minutes: date.getMinutes()},
-      {didUserWrite: false, text: AI_RESPONSE.choices[0]?.message?.content || "" , hours: date.getHours(), minutes: date.getMinutes()}
+      {didUserWrite: false, text: AI_MESSAGE, hours: date.getHours(), minutes: date.getMinutes()}
     ])
 
     
@@ -42,7 +43,7 @@ function App(){
   <div> {/* Chat History*/}
     <h2>Chat History</h2>
     {chatHistory.map((entry, index) => (
-      <ChatHistory key={index} didUserWrite={entry.didUserWrite} text={entry.text}/>
+      <ChatHistory key={index} didUserWrite={entry.didUserWrite} text={entry.text} hours={entry.hours} minutes={entry.minutes}/>
     ))}
     
     

@@ -26,7 +26,7 @@ function UserChatBox({ onSend }) {
 
     return <>
     <input type="text" name="userInput" value={text} onChange={(e) => setText(e.target.value)}
-    onKeyDown={handleKeyDown}/>
+    onKeyDown={handleKeyDown} autoComplete="off"/>
     <button for="userInput" onClick={sendMessage}>Send</button>
     </>
 
