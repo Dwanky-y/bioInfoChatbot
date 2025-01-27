@@ -3,36 +3,61 @@ import AIOutPutBox from "./AIOutputBox";
 import UserChatBox from "./UserChatBox";
 import ChatHistory from "./chatHistory";
 import "./App.css";
-import { getGroqChatCompletion } from './GROQAI.js';
+// import { getGroqChatCompletion } from '../backend/GROQAI.js';
 import { useEffect, useState } from "react";
 
 //Find a way to use the API key in a .env file
 // const groq = new Groq({dangerouslyAllowBrowser: true, apiKey: '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'})
 //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
 
-const AI_RESPONSE = await getGroqChatCompletion("Help the user with the website 'Data Monkey' however you are not finished yet");
+// const AI_RESPONSE = await getGroqChatCompletion("Help the user with the website 'Data Monkey' however you are not finished yet");
 function App(){
   // console.log(AI_RESPONSE.choices[0]?.message?.content || "")
   document.title = "Bio Info Bot" //Changes web name
 
+
   const [chatHistory, setChatHistory] = useState([
     {didUserWrite: true, text: "Hello Ai!", hours: new Date().getHours(), minutes: new Date().getMinutes()},
     {didUserWrite: false, text: "Hello User!", hours: new Date().getHours(), minutes: new Date().getMinutes()},
-    {didUserWrite: false, text: AI_RESPONSE.choices[0]?.message?.content || "", hours: new Date().getHours(), minutes: new Date().getMinutes()}
+    // {didUserWrite: false, text: AI_RESPONSE.choices[0]?.message?.content || "", hours: new Date().getHours(), minutes: new Date().getMinutes()}
   ])
+
+  const getAIResponse = async (message) => {
+    
+    try {
+      const response = await fetch(`http://localhost:5000/Ai/${encodeURIComponent(message)}`)
+      
+      if (!response.ok) {
+        throw new Error(`Http error! Status: ${response.status}`)
+      }
+      const data = await response.text()
+      console.log("data: ", data)
+      return data
+      
+    } catch(error) {
+      console.error("Error fetching AI: ", error)
+    }
+    
+    // const response = await fetch('/test');
+    // const text = await response.text();
+    // console.log("text: ", text);
+    // return text;
+  }
 
   const handleUserInput = async (message) => {
     const date = new Date()
     console.log(date.getMinutes())
     console.log("Recevied! User has sent: ", message)
     
-    const AI_RESPONSE = await getGroqChatCompletion(message);
-    const AI_MESSAGE = AI_RESPONSE.choices[0]?.message?.content || ""
+    // const AI_RESPONSE = await getGroqChatCompletion(message);
+    // const AI_MESSAGE = AI_RESPONSE.choices[0]?.message?.content || ""
+    const AI_RESPONSE = await getAIResponse(message)
+    console.log("AI_RESPONSE: ", AI_RESPONSE)
 
     setChatHistory( (prevArray) => [
       ...prevArray,
       {didUserWrite : true, text : message, hours: date.getHours(), minutes: date.getMinutes()},
-      {didUserWrite: false, text: AI_MESSAGE, hours: date.getHours(), minutes: date.getMinutes()}
+      {didUserWrite: false, text: AI_RESPONSE, hours: date.getHours(), minutes: date.getMinutes()}
     ])
 
     
