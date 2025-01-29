@@ -1,8 +1,36 @@
-# React + Vite
+# Bioinformatics Chatbot -- made with React.js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Installation (2025-01-28 version)
 
-Currently, two official plugins are available:
+1. Clone the git repository
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+git clone https://github.com/Dwanky-y/bioInfoChatbot.git
+```
+
+2. Install `Node.js` and `npm`
+
+Follow instructions here: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+
+3. Install package requirements from `package-lock.json`
+
+```
+cd bioInfoChatbot
+npm install
+cd ../backend
+npm install
+```
+
+4. Make an `.env` file containing `GROQ_API_KEY = "gsk_..."` in the backend folder.
+
+5. Have two tabs open in the terminal.
+
+```
+// tab 1 to run backend
+bioInfoChatbot/backend % node server.js
+```
+
+```
+// tab 2 to run frontend
+bioInfoChatbot % npm run dev
+```
