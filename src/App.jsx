@@ -25,7 +25,9 @@ function App(){
   const getAIResponse = async (message) => {
     
     try {
-      const response = await fetch(`http://localhost:5000/Ai/${encodeURIComponent(message)}`)
+      const response = await fetch(`http://localhost:5000/Ai/${encodeURIComponent(message)}`, {
+        method: 'POST' //a post method needs to be declared otherwise it wont work
+      })
       
       if (!response.ok) {
         throw new Error(`Http error! Status: ${response.status}`)

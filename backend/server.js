@@ -8,17 +8,32 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
+// conversation history
+let chatHistory = [
+    {
+        role: "system", //Admin
+        content: "You are a AI chat bot that helps people with the website 'Data Monkey' the website is a bioinfomatics website"
+    },
+    // { example
+        // role: "user",
+        // content: "hi"
+    // }
+]
+
 // Routes
 app.get('/', (req, res) => {
     res.send("I am alive!");
 });
 
-app.get('/Ai/:UserMessage', async (req, res) => {
+app.post('/Ai/:UserMessage', async (req, res) => {
     const userMessage = req.params.UserMessage
-    try{
-        const aiResponse = await getGroqChatCompletion(userMessage)
-        const aiTextResponse = aiResponse.choices[0]?.message?.content || ""
+    chatHistory.push({ role:"user", content: userMessage}) //add user message to chat history
 
+    try{
+        const aiResponse = await getGroqChatCompletion(chatHistory)
+        const aiTextResponse = aiResponse.choices[0]?.message?.content || ""
+        
+        chatHistory.push({role: "assistant", content: aiTextResponse}) // adds ai response to chat history
         res.send(aiTextResponse)
 
     } catch(error) {

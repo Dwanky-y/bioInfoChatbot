@@ -5,15 +5,11 @@ const fetch = require('node-fetch');
 require("dotenv").config();
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-async function getGroqChatCompletion(userMessage) {
+async function getGroqChatCompletion(chatHistory) {
     return groq.chat.completions.create({
-        messages: [
-            {
-                role: "user",
-                content: userMessage
-            }
-        ],
-        model: "llama3-8b-8192"
+
+            messages: chatHistory, //AI Memory
+            model: "llama3-8b-8192"
     });
 }
 
