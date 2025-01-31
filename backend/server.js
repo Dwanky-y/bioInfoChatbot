@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { getGroqChatCompletion } = require('./GROQAI');
 const app = express();
-const port = 5000;
+const port = 5001;
 
 // Middleware
 app.use(cors());
