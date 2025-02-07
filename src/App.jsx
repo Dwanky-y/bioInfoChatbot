@@ -60,7 +60,7 @@ function App(){
   }
 
   return <>
-  <h1 id="title">Bioinfomatics AI chatbot!</h1>
+  <h1 id="title">Bioinformatics AI chatbot!</h1>
   <div> {/* Chat History*/}
     <h2>Chat History</h2>
     {chatHistory.map((entry, index) => (
