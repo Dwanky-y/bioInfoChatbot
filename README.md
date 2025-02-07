@@ -1,6 +1,6 @@
 # Bioinformatics Chatbot -- made with React.js
 
-## Installation (2025-01-28 version) // test
+## Installation (2025-02-07 version)
 
 1. Clone the git repository
 
@@ -32,5 +32,5 @@ bioInfoChatbot/backend % node server.js
 
 ```
 // tab 2 to run frontend
-bioInfoChatbot % npm run dev
+bioInfoChatbot % npm start
 ```

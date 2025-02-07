@@ -1,19 +1,13 @@
-import DarkModeToggle from "./darkModeToggle";
+import DarkModeToggle from "./DarkModeToggle";
 import AIOutPutBox from "./AIOutputBox";
 import UserChatBox from "./UserChatBox";
-import ChatHistory from "./chatHistory";
+import ChatHistory from "./ChatHistory";
 import "./App.css";
-// import { getGroqChatCompletion } from '../backend/GROQAI.js';
 import { useEffect, useState } from "react";
 
-//Find a way to use the API key in a .env file
-// const groq = new Groq({dangerouslyAllowBrowser: true, apiKey: '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'})
-//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
-
-// const AI_RESPONSE = await getGroqChatCompletion("Help the user with the website 'Data Monkey' however you are not finished yet");
 function App(){
   // console.log(AI_RESPONSE.choices[0]?.message?.content || "")
-  document.title = "Bio Info Bot" //Changes web name
+  document.title = "Bioinfo Chatbot" //Changes web name
 
 
   const [chatHistory, setChatHistory] = useState([
