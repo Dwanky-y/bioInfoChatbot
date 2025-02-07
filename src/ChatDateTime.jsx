@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 
 
-function ChatHistory({didUserWrite, text, hours, minutes}){
+function ChatDateTime({didUserWrite, text, hours, minutes}){
     // console.log("The current hour is: ", hours)
     // console.log("The current minute is: ", minutes)
     return <>
@@ -10,4 +10,4 @@ function ChatHistory({didUserWrite, text, hours, minutes}){
     </>
 }
 
-export default ChatHistory
+export default ChatDateTime

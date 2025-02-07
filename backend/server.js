@@ -12,7 +12,7 @@ app.use(express.json());
 let chatHistory = [
     {
         role: "system", //Admin
-        content: "You are a AI chat bot that helps people with the website 'Data Monkey' the website is a bioinfomatics website"
+        content: "You are a AI chat bot that helps people with the website 'Datamonkey' the website is a bioinfomatics website"
     },
     // { example
         // role: "user",

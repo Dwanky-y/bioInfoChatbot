@@ -1,7 +1,7 @@
 import DarkModeToggle from "./DarkModeToggle";
-import AIOutPutBox from "./AIOutputBox";
+import ModelOutPutBox from "./ModelOutputBox";
 import UserChatBox from "./UserChatBox";
-import ChatHistory from "./ChatHistory";
+import ChatDateTime from "./ChatDateTime";
 import "./App.css";
 import { useEffect, useState } from "react";
 
@@ -64,12 +64,12 @@ function App(){
   <div> {/* Chat History*/}
     <h2>Chat History</h2>
     {chatHistory.map((entry, index) => (
-      <ChatHistory key={index} didUserWrite={entry.didUserWrite} text={entry.text} hours={entry.hours} minutes={entry.minutes}/>
+      <ChatDateTime key={index} didUserWrite={entry.didUserWrite} text={entry.text} hours={entry.hours} minutes={entry.minutes}/>
     ))}
     
     
   </div>
-  <AIOutPutBox/>
+  <ModelOutPutBox/>
   <UserChatBox onSend={handleUserInput}/><DarkModeToggle/></>
 }
 
