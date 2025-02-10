@@ -1,13 +1,56 @@
-import React, { useState } from "react"
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { FiUser, FiCpu } from "react-icons/fi"; // Import icons for user and AI
 
+const renderers = {
+  code({ node, inline, className, children, ...props }) {
+    const match = /language-(\w+)/.exec(className || "");
+    return !inline && match ? (
+      <SyntaxHighlighter
+        style={materialDark}
+        language={match[1]}
+        PreTag="div"
+        {...props}
+      >
+        {String(children).replace(/\n$/, "")}
+      </SyntaxHighlighter>
+    ) : (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  },
+};
 
+const ChatHistory = ({ didUserWrite, text, hours, minutes }) => {
+  return (
+    <>
+      <div className={`chat-bubble ${didUserWrite ? "user-bubble" : "ai-bubble"}`}>
+        {/* Icon based on message type */}
+        <div className={`message-icon ${didUserWrite ? "user-icon" : "ai-icon"}`}>
+          {didUserWrite ? <FiUser /> : <FiCpu />}
+        </div>
 
-function ChatHistory({didUserWrite, text, hours, minutes}){
-    // console.log("The current hour is: ", hours)
-    // console.log("The current minute is: ", minutes)
-    return <>
-    <h3>{hours}:{minutes}| {didUserWrite ? "You:" : "AI: "} {text} </h3>
+        {/* Bubble text content */}
+        <div className="bubble-container">
+          <div className="bubble-text">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={renderers}>
+              {text}
+            </ReactMarkdown>
+          </div>
+          <div className="bubble-time">
+            {hours}:{minutes < 10 ? `0${minutes}` : minutes}
+          </div>
+        </div>
+      </div>
+
+      {/* Separator line */}
+      <div className="separator-line"></div>
     </>
-}
+  );
+};
 
-export default ChatHistory
+export default ChatHistory;
