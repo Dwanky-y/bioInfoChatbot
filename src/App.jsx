@@ -1,13 +1,13 @@
+import { useState } from "react";
+import "./App.css";
 import DarkModeToggle from "./DarkModeToggle";
-import ModelOutPutBox from "./ModelOutputBox";
 import UserChatBox from "./UserChatBox";
 import ChatDateTime from "./ChatDateTime";
-import "./App.css";
-import { useEffect, useState } from "react";
+
 
 function App(){
   // console.log(AI_RESPONSE.choices[0]?.message?.content || "")
-  document.title = "Bioinfo Chatbot" //Changes web name
+  document.title = "Bioinfo Chatbot" // Changes web tab name
 
 
   const [chatHistory, setChatHistory] = useState([
@@ -17,7 +17,6 @@ function App(){
   ])
 
   const getAIResponse = async (message) => {
-    
     try {
       const response = await fetch(`http://localhost:5001/Ai/${encodeURIComponent(message)}`, {
         method: 'POST' //a post method needs to be declared otherwise it wont work
@@ -32,8 +31,7 @@ function App(){
       
     } catch(error) {
       console.error("Error fetching AI: ", error)
-    }
-    
+    }  
     // const response = await fetch('/test');
     // const text = await response.text();
     // console.log("text: ", text);
@@ -69,7 +67,6 @@ function App(){
     
     
   </div>
-  <ModelOutPutBox/>
   <UserChatBox onSend={handleUserInput}/><DarkModeToggle/></>
 }
 
