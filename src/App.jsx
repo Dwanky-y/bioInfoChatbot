@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import DarkModeToggle from "./DarkModeToggle";
+// import ModelOutPutBox from "./ModelOutputBox"; // A component that displays the
 import UserChatBox from "./UserChatBox";
 import ChatDateTime from "./ChatDateTime";
 
