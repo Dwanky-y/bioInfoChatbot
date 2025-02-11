@@ -7,15 +7,25 @@ import ChatDateTime from "./ChatDateTime";
 
 
 function App(){
-  // console.log(AI_RESPONSE.choices[0]?.message?.content || "")
-  document.title = "Bioinfo Chatbot" // Changes web tab name
+  // Web application title
+  document.title = "BSTS Chatbot"
 
+  // This is how the AI response can be accessed from the fetch response.
+  // console.log(AI_RESPONSE.choices[0]?.message?.content || "") 
 
-  const [chatHistory, setChatHistory] = useState([
-    {didUserWrite: true, text: "Hello Ai!", hours: new Date().getHours(), minutes: new Date().getMinutes()},
-    {didUserWrite: false, text: "Hello User!", hours: new Date().getHours(), minutes: new Date().getMinutes()},
-    // {didUserWrite: false, text: AI_RESPONSE.choices[0]?.message?.content || "", hours: new Date().getHours(), minutes: new Date().getMinutes()}
-  ])
+  // Initialization of chat history
+  const [chatHistory, setChatHistory] = useState(
+    [
+    {isUser: true, 
+      text: "Hello AI!", 
+      hours: new Date().getHours(), 
+      minutes: new Date().getMinutes()},
+    {isUser: false, 
+      text: "Hello User!", 
+      hours: new Date().getHours(), 
+      minutes: new Date().getMinutes()},
+  ]
+)
 
   const getAIResponse = async (message) => {
     try {
@@ -50,25 +60,35 @@ function App(){
     console.log("AI_RESPONSE: ", AI_RESPONSE)
 
     setChatHistory( (prevArray) => [
-      ...prevArray,
-      {didUserWrite : true, text : message, hours: date.getHours(), minutes: date.getMinutes()},
-      {didUserWrite: false, text: AI_RESPONSE, hours: date.getHours(), minutes: date.getMinutes()}
+      ...prevArray, // append the previous array
+      {isUser : true, 
+        text : message, 
+        hours: date.getHours(), 
+        minutes: date.getMinutes()},
+      {isUser: false, 
+        text: AI_RESPONSE, 
+        hours: date.getHours(), 
+        minutes: date.getMinutes()}
     ])
 
     
   }
 
   return <>
-  <h1 id="title">Bioinformatics AI chatbot!</h1>
-  <div> {/* Chat History*/}
+  <h1 id="title">BSTS AI Chatbot</h1>
+  <div> 
     <h2>Chat History</h2>
+    {/* Comment: Taking the chatHistory variable and mapping it to the ChatDateTime component for formatting*/}
     {chatHistory.map((entry, index) => (
-      <ChatDateTime key={index} didUserWrite={entry.didUserWrite} text={entry.text} hours={entry.hours} minutes={entry.minutes}/>
+      <ChatDateTime key={index} 
+      isUser={entry.isUser} 
+      text={entry.text} 
+      hours={entry.hours} 
+      minutes={entry.minutes}/>
     ))}
-    
-    
   </div>
-  <UserChatBox onSend={handleUserInput}/><DarkModeToggle/></>
+  <UserChatBox onSend={handleUserInput}/>
+  <DarkModeToggle/></>
 }
 
 export default App
