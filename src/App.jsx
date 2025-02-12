@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import DarkModeToggle from "./darkModeToggle";
 import UserChatBox from "./UserChatBox";
-import ChatHistory from "./ChatHistory";
+import ChatFormat from "./ChatFormat"; 
 import { FiTrash2 } from "react-icons/fi"; // Import trash icon for delete button
 import "./App.css";
+const port = 5001;
 
 function App() {
-  document.title = "Bio Info Bot";
+  document.title = "BSTS Chatbot";
 
   // Initialize chats
   const initialChats = JSON.parse(localStorage.getItem("chats")) || {};
@@ -27,7 +27,7 @@ function App() {
   // Fetch the AI response from your API
   const getAIResponse = async (message) => {
     try {
-      const response = await fetch(`http://localhost:5001/Ai/${encodeURIComponent(message)}`, {
+      const response = await fetch(`http://localhost:${port}/Ai/${encodeURIComponent(message)}`, {
         method: "POST",
       });
       if (!response.ok) {
@@ -44,7 +44,7 @@ function App() {
   const handleUserInput = async (message) => {
     const now = new Date();
     const userMessage = {
-      didUserWrite: true,
+      isUser: true,
       text: message,
       hours: now.getHours(),
       minutes: now.getMinutes(),
@@ -53,7 +53,7 @@ function App() {
     const updatedHistory = [...chatHistory, userMessage];
     setChatHistory(updatedHistory);
 
-    // Update chats state
+    // Update chats state. Note that there is only a single chatHistory being used across different chatIds.
     setChats((prevChats) => ({
       ...prevChats,
       [currentChatId]: updatedHistory,
@@ -63,7 +63,7 @@ function App() {
     const AI_RESPONSE = await getAIResponse(message);
     const responseTime = new Date();
     const aiMessage = {
-      didUserWrite: false,
+      isUser: false,
       text: AI_RESPONSE,
       hours: responseTime.getHours(),
       minutes: responseTime.getMinutes(),
@@ -94,11 +94,11 @@ function App() {
     setChatHistory(chats[chatId] || []);
   };
 
-  // Handle deleting a chat
+  // Handle deleting a chat. This does not delete the central chatHistory, only the chatId key and associated value for display from chats.
   const handleChatDelete = (chatId) => {
     const updatedChats = { ...chats };
     delete updatedChats[chatId];
-    setChats(updatedChats);
+    setChats(updatedChats); 
 
     // If the deleted chat is the current one, switch to another chat
     if (currentChatId === chatId) {
@@ -147,15 +147,14 @@ function App() {
 
       <main className="chat-main">
         <header className="chat-header">
-          <h1>Bio Info Bot</h1>
-          <DarkModeToggle />
+          <h1>BSTS Chatbot</h1>
         </header>
 
         <section className="chat-history-container">
           {chatHistory.map((entry, index) => (
-            <ChatHistory
+            <ChatFormat
               key={index}
-              didUserWrite={entry.didUserWrite}
+              isUser={entry.isUser}
               text={entry.text}
               hours={entry.hours}
               minutes={entry.minutes}

@@ -25,13 +25,13 @@ const renderers = {
   },
 };
 
-const ChatHistory = ({ didUserWrite, text, hours, minutes }) => {
+const ChatFormat = ({ isUser, text, hours, minutes }) => {
   return (
     <>
-      <div className={`chat-bubble ${didUserWrite ? "user-bubble" : "ai-bubble"}`}>
+      <div className={`chat-bubble ${isUser ? "user-bubble" : "ai-bubble"}`}>
         {/* Icon based on message type */}
-        <div className={`message-icon ${didUserWrite ? "user-icon" : "ai-icon"}`}>
-          {didUserWrite ? <FiUser /> : <FiCpu />}
+        <div className={`message-icon ${isUser ? "user-icon" : "ai-icon"}`}>
+          {isUser ? <FiUser /> : <FiCpu />}
         </div>
 
         {/* Bubble text content */}
@@ -53,4 +53,4 @@ const ChatHistory = ({ didUserWrite, text, hours, minutes }) => {
   );
 };
 
-export default ChatHistory;
+export default ChatFormat;
