@@ -1,4 +1,342 @@
-#title{
+/* Overall layout */
+.app-container {
+    display: flex;
+    height: 100vh;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+    background-color: #202123;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Sidebar header */
+.sidebar-header h2 {
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
     text-align: center;
-    color:rgb(51, 158, 122);
+    color: #e0e0e0;
+    font-weight: bold;
+}
+
+/* New chat button */
+.new-chat-button {
+    padding: 0.75rem;
+    background-color: #7433FF;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.new-chat-button:hover {
+    background-color: #8a56ff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    transform: translateY(-2px);
+}
+
+/* Sidebar chat list */
+.sidebar-chats {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Sidebar chat item */
+.chat-item {
+    padding: 0.75rem;
+    background-color: #343541;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 0.5rem;
+}
+
+/* Delete button inside chat item */
+.delete-chat-button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.delete-chat-button:hover {
+    color: #ff6961;
+    opacity: 1;
+}
+
+/* Chat item hover effect */
+.chat-item:hover {
+    background-color: #464856;
+    transform: translateY(-2px);
+}
+
+.chat-item.active {
+    background-color: #005c4b;
+}
+
+/* Main chat area */
+.chat-main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Chat header */
+.chat-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: #121212;
+    border-bottom: 1px solid #333;
+    width: 80%;
+}
+
+.chat-header h1 {
+    font-size: 1.5rem;
+}
+
+/* Chat history container */
+.chat-history-container {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #121212;
+    scroll-behavior: smooth;
+    width: 70%;
+}
+
+/* Message bubble container */
+.bubble-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    word-wrap: break-word;
+    font-size: 1rem;
+    line-height: 1.5;
+    width: 100%;
+}
+
+/* Message icons */
+.message-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Icons for user and AI */
+.user-icon {
+    background-image: url('/icons/user-icon.svg');
+}
+
+.ai-icon {
+    background-image: url('/icons/ai-icon.svg');
+}
+
+/* Loading animation for AI responses */
+.loading-dots {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.loading-dots span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 2px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    animation: blink 1.2s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.24s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.12s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0;
+}
+
+@keyframes blink {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Word-by-word animation */
+.word-animate {
+    opacity: 0;
+    animation: fade-in 0.1s forwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Text bubble */
+.bubble-text {
+    flex-grow: 1;
+    font-size: 1rem;
+    color: inherit;
+    padding: 0.5rem 0;
+}
+
+/* Separator line between messages */
+.separator-line {
+    width: 100%;
+    height: 1px;
+    background-color: #444;
+}
+
+/* Input container with dynamic height */
+.chat-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+/* Input box container */
+.input-box-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2e2e2e;
+    border-radius: 16px;
+    border: 1px solid #444;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 0.5rem;
+    width: 70%;
+}
+
+/* Input field with auto-growing height */
+.chat-input-field {
+    flex-grow: 1;
+    background-color: transparent;
+    border: none;
+    color: #e0e0e0;
+    font-size: 1rem;
+    padding: 0.5rem;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    min-height: 2rem;
+    max-height: 10rem;
+}
+
+/* Placeholder style */
+.chat-input-field::placeholder {
+    color: #bbb;
+    font-style: italic;
+}
+
+/* Icon buttons */
+.icon-button {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+/* Send button */
+.send-button {
+    background-color: #005c4b;
+    color: white;
+    padding: 0.6rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.send-button:hover {
+    background-color: #007a5e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .chat-history-container, .input-box-container {
+        width: 90%;
+    }
+
+    .chat-header h1 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-box-container {
+        padding: 0.5rem;
+    }
+
+    .chat-input-field {
+        font-size: 0.9rem;
+    }
+
+    .icon-button {
+        padding: 0.4rem;
+    }
+
+    .new-chat-button {
+        font-size: 0.9rem;
+    }
 }
