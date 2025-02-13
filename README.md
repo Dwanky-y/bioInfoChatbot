@@ -17,7 +17,7 @@ Follow instructions here: https://docs.npmjs.com/downloading-and-installing-node
 ```
 cd bioInfoChatbot
 npm install
-cd ../backend
+cd backend
 npm install
 ```
 
