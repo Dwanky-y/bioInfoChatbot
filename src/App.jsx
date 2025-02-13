@@ -147,7 +147,7 @@ function App() {
 
       <main className="chat-main">
         <header className="chat-header">
-          <h1>BSTS Chatbot</h1>
+          <h1>Bioinformatics Software Tutorial Supporting (BSTS) Chatbot</h1>
         </header>
 
         <section className="chat-history-container">
