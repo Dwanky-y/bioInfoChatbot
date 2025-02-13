@@ -32,5 +32,5 @@ bioInfoChatbot/backend % node server.js
 
 ```
 // tab 2 to run frontend; with npm run dev, the web app should be viewed on the browser at 'http://localhost:5173/'
-bioInfoChatbot % npm run dev
+bioInfoChatbot/src % npm run dev
 ```
