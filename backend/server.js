@@ -11,18 +11,28 @@ app.use(express.json());
 // Initialization of chatHistory with a system prompt
 let chatHistory = [
     {
-        role: "system", // Admin
+        role: "system",
         content: 
         "You are an AI chatbot named Bioinformatics Software Tutorial Supporting Chatbot, or BSTS Chatbot.\
         You are an assistant for question-answering tasks. \
         You are helping users with a website Datamonkey (https://datamonkey.org/), which is a web-based graphical user interface for Hypothesis Testing using Phylogenies (HyPhy).\
-        The users would like be undergraduate students with either computer science background or biology background.\
-        Provide examples when explaining concepts.\
+        \
+        The users are undergraduate students with computer science background, but you are not the undergraduate student with computer science background.\
+        \
+        Provide examples when explaining concepts. Use examples that the users are likely familiar with.\
         Use a step-by-step guidance when applicable.\
         \
-        \
         Use the following pieces of retrieved context given within delimiters to answer the user's questions. \
-        If you don't know the answer, just say that you don't know."
+        \
+        \
+        If you don't know the answer, just say that you don't know.\
+        Before answering the question, verify information in each step and indicate parts that cannot be verified.\
+        Only generate answers using facts. If guessing cannot be avoided, say that it is a prediction.\
+        If the user's question is ambiguous, ask to clarify. Also, ask to the user to provide details or context if needed.\
+        Do not provide unverified answers with confidence, and provide evidence when needed.\
+        For each of your answers, if you have reference or evidence, show a summary of such information.\
+        \
+        "
     },
     // { example
         // role: "user",
@@ -30,17 +40,50 @@ let chatHistory = [
     // }
 ]
 
-// Testing routes
-app.get('/', (req, res) => {
-    res.send("I am alive!");
-});
-app.get('/test', (req, res) => {
-    res.send("This is a test");
-});
+// Embedding model loading
+async function loadModel(userMessage) {
+    try {
+        // Dynamic import of the pipeline function; an ES module cannot be imported using require().
+        const { cos_sim, pipeline } = await import('@xenova/transformers');
 
+        // Embedding model loading
+        const extractor = await pipeline('feature-extraction', 'Xenova/bge-large-en-v1.5', {
+            use_gpu: true, // Enable WebGPU if available
+        });
+
+        // List of documents you want to embed
+        const documents = [
+            'Hello world.',
+            'The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.',
+            'I love pandas so much!',
+        ];
+
+        // [DOCUMENTS] Compute sentence embeddings.
+        const embeddings = await extractor(documents, { pooling: 'mean', normalize: true, batch_size: 4 });
+        
+        // [USER QUERY] Prepend recommended query instruction for retrieval.
+        const query_prefix = 'Represent this sentence for searching relevant passages: '
+        const query = query_prefix + userMessage;
+        const query_embeddings = await extractor(query, { pooling: 'mean', normalize: true });
+        
+        // [GET MOST RELEVANT DOCUMENT FOR THE QUERY] Sort query by cosine similarity score.
+        const scores = embeddings.tolist().map(
+            (embedding, i) => ({
+                id: i,
+                score: cos_sim(query_embeddings.data, embedding),
+                text: documents[i],
+            })
+        ).sort((a, b) => b.score - a.score);
+        console.log(scores);
+
+    } catch (error) {
+        console.error('Error loading model:', error);
+    }
+}
 
 app.post('/Ai/:UserMessage', async (req, res) => {
     const userMessage = req.params.UserMessage // get user message from request
+    loadModel(userMessage);
     chatHistory.push({ role:"user", content: userMessage}) // add user message to chat history
     try{
         const aiResponse = await getGroqChatCompletion(chatHistory)

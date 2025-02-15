@@ -2,17 +2,17 @@
 
 ## Installation (2025-02-12 version)
 
-1. Clone the git repository
+1. Clone the git repository.
 
 ```
 git clone https://github.com/Dwanky-y/bioInfoChatbot.git
 ```
 
-2. Install `Node.js` and `npm`
+2. Install `Node.js` and `npm`.
 
 Follow instructions here: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 
-3. Install package requirements from `package-lock.json`
+3. Install package requirements from `package-lock.json`. Below code will do it automatically for you. After installation, you will get folder `node_modules` in each directory.
 
 ```
 cd bioInfoChatbot
@@ -31,6 +31,8 @@ bioInfoChatbot/backend % node server.js
 ```
 
 ```
-// tab 2 to run frontend; with npm run dev, the web app should be viewed on the browser at 'http://localhost:5173/'
+// tab 2 to run frontend; with 'npm run dev', the web app should be viewed on the browser at 'http://localhost:5173/'
 bioInfoChatbot % npm run dev
 ```
+
+6. Add extensions that you do not want to track in `.gitignore` file. For example, you would definitely not want to have `*.env` files and `node_modules` folders to be tracked. On Visual Studio Code, the untracked files will be greyed out.
