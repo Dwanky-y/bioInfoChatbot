@@ -1,6 +1,15 @@
+
+
+// Importing required modules
 const express = require('express');
 const cors = require('cors');
 const { getGroqChatCompletion } = require('./GROQAI');
+const fs = require('fs');
+const path = require('path');
+const pdf = require('pdf-parse');
+const RecursiveCharacterTextSplitter = require('langchain/text_splitter').RecursiveCharacterTextSplitter;
+const Chroma = require('@langchain/community/vectorstores/chroma').Chroma;
+
 const app = express();
 const port = 5001;
 
@@ -40,8 +49,33 @@ let chatHistory = [
     // }
 ]
 
+// Load documents from folder (TXT and PDF)
+async function loadDocuments(folderPath) {
+    const files = fs.readdirSync(folderPath);
+    const documents = [];
+
+    for (const file of files) {
+        const filePath = path.join(folderPath, file);
+        let text = '';
+
+        if (/(\.txt|\.jsx)$/.test(file)) {
+            text = fs.readFileSync(filePath, 'utf-8');
+        } else if (file.endsWith('.pdf')) {
+            const dataBuffer = fs.readFileSync(filePath);
+            const pdfData = await pdf(dataBuffer);
+            text = pdfData.text;
+        } else {
+            continue; // Skip unsupported files
+        }
+
+        documents.push({ filename: file, text });
+    }
+
+    return documents;
+}
+
 // Embedding model loading
-async function loadModel(userMessage) {
+async function loadModel(userMessage, documents) {
     try {
         // Dynamic import of the pipeline function; an ES module cannot be imported using require().
         const { cos_sim, pipeline } = await import('@xenova/transformers');
@@ -51,15 +85,9 @@ async function loadModel(userMessage) {
             use_gpu: true, // Enable WebGPU if available
         });
 
-        // List of documents you want to embed
-        const documents = [
-            'Hello world.',
-            'The giant panda (Ailuropoda melanoleuca), sometimes called a panda bear or simply panda, is a bear species endemic to China.',
-            'I love pandas so much!',
-        ];
-
         // [DOCUMENTS] Compute sentence embeddings.
-        const embeddings = await extractor(documents, { pooling: 'mean', normalize: true, batch_size: 4 });
+        const documentArray = documents.map(doc => doc.text);
+        const embeddings = await extractor(documentArray, { pooling: 'mean', normalize: true, batch_size: 4 });
         
         // [USER QUERY] Prepend recommended query instruction for retrieval.
         const query_prefix = 'Represent this sentence for searching relevant passages: '
@@ -71,7 +99,7 @@ async function loadModel(userMessage) {
             (embedding, i) => ({
                 id: i,
                 score: cos_sim(query_embeddings.data, embedding),
-                text: documents[i],
+                content: documents[i],
             })
         ).sort((a, b) => b.score - a.score);
         console.log(scores);
@@ -83,7 +111,9 @@ async function loadModel(userMessage) {
 
 app.post('/Ai/:UserMessage', async (req, res) => {
     const userMessage = req.params.UserMessage // get user message from request
-    loadModel(userMessage);
+    documents = await loadDocuments('./data/datamonkey-both/')
+    loadModel(userMessage,documents);
+    
     chatHistory.push({ role:"user", content: userMessage}) // add user message to chat history
     try{
         const aiResponse = await getGroqChatCompletion(chatHistory)
