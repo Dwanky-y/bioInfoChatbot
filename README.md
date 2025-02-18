@@ -19,6 +19,7 @@ cd bioInfoChatbot
 npm install
 cd backend
 npm install
+npm install react-icons
 ```
 
 4. Make an `.env` file containing `GROQ_API_KEY = "gsk_..."` in the backend folder.
