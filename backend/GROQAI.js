@@ -9,7 +9,7 @@ async function getGroqChatCompletion(chatHistory) {
     return groq.chat.completions.create({
 
             messages: chatHistory, //AI Memory
-            model: "llama3-8b-8192" // 70B parameter model for chat completion
+            model: "llama3-70b-8192" // 70B parameter model for chat completion
     });
 }
 
