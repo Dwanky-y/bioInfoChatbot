@@ -1,42 +1,30 @@
 //Chroma
+//https://huggingface.co/Xenova/all-MiniLM-L6-v2
 const { Chroma } = require("@langchain/community/vectorstores/chroma")
-const client = new ChromaClient();
+const { pipeline } = require("@huggingface/transformers")
 
-async function createCollection() {
-    const collection = await client.getOrCreateCollection({
-        name: "bioInformaticsData"
-    })
+// async function createVectorStorage() {
 
-    await collection.upsert ({
-        documents: [
-            "This document is about human cells",
-            "This document is about highschool biology",
-            "Spongebob lives under the sea"
-        ],
-        ids: ["id1", "id2", "id3"],
-    })
+// }
 
-    // const result = await collection.query({
-    //     queryTexts: "A document about life",
-    //     nResults: 3
-    // })
+async function createTransformer() {
+    const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2'); 
 
-    // console.log(result)
-    // console.log(collection)
-    return collection
+    return extractor
 }
 
 
-async function queryChroma(text, nResults = 3) {
-    const collection = await createCollection()
-    // console.log(collection)
 
-    const result = await collection.query({
-        queryTexts: text,
-        nResults: nResults
-    })
+async function createVector(sentences) {
+    //embedding model / sentence transformer
+    // const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2'); 
+    const extractor = await createTransformer()
+    // const sentences = ['A document about human cells', 
+    //     'A document about highschool biology', 
+    //     'Spongebob lives under the sea']
 
-    console.log(result)
+    const output = await extractor(sentences, {pooling: 'mean', normalize: true});
+    console.log(output.tolist())
 }
 
-queryChroma("This document is about human cells")
+module.exports = { createVector };
