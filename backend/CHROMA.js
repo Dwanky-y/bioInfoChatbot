@@ -1,53 +1,83 @@
 //Chroma
-//https://huggingface.co/Xenova/all-MiniLM-L6-v2
+//https://v03.api.js.langchain.com/classes/_langchain_community.vectorstores_chroma.Chroma.html
+//https://github.com/ollama/ollama?tab=readme-ov-file
+//ollama pull mxbai-embed-large
+
 const { Chroma } = require("@langchain/community/vectorstores/chroma")
-const { pipeline } = require("@huggingface/transformers");
-const { TbVectorTriangle } = require("react-icons/tb");
+// const { pipeline } = require("@huggingface/transformers");
+const { OllamaEmbeddings } = require("@langchain/ollama")
 
 
-// async function createVectorStorage() {
+const embeddingModel = new OllamaEmbeddings({
+    model: "mxbai-embed-large", // Default value
+    baseUrl: "http://localhost:11434", // Default value
+})
 
-// }
-
-async function createTransformer() {
-    const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2'); 
-    return extractor
-}
-
-const vectorStore = new Chroma(createTransformer, {
-    collectionName: "bioinformatics"
+const vectorStore = new Chroma(embeddingModel, {
+    collectionName: "bioinformatics",
+    url: "http://localhost:8000",
 })
 
 async function createVector(sentences) {
-    //embedding model / sentence transformer
-    // const extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2'); 
-    const extractor = await createTransformer()
-    // const sentences = ['A document about human cells', 
-    //     'A document about highschool biology', 
-    //     'Spongebob lives under the sea']
+    // console.log("Hello")
+    // const vector = await embeddingModel.embedQuery("This is a test")
+    const vectors = await embeddingModel.embedDocuments(sentences)
+    // sentences.map((_, index) => `id_${index + 1}`), 
+    // await vectorStore.addVectors(vectors, sentences.map((sentence, index) => ({
+    //     pageContent: sentence,
+    //     metadata: {},
+    //     id: `id_${index + 1}`
 
-    const output = await extractor(sentences, {pooling: 'mean', normalize: true});
-    const vectors = output.tolist()
-    const IDArry = sentences.map((_, index) => `id_${index + 1}`)
+    // })))
 
-    // await vectorStore.addDocuments(sentences, {
-    //     id: IDArry,
-    // })
 
-    //add vectors to Chroma 
-    await vectorStore.addVectors(vectors, sentences, {
-        ids: IDArry
-        // ids: ["id1", "id2", "id3"]
-    })
+    //Check for duplicate vectors
+    const existingVectors = await vectorStore.similaritySearch("", 1000) //gets all documents in the database
+    // console.log(existingVectors)
+    const newVectors = [];
+    const newSentences = []
+    const newIds = []
 
-    // const results = await vectorStore.similaritySearchVectorWithScore("biology", 3)
+    for (let i = 0; i < vectors.length; i++) {
+        const vector = vectors[i];
+        const sentence = sentences[i];
+        const id = `id_${i + 1}`
+
+        const isDuplicate = existingVectors.some(existingVectors => {
+            return existingVectors.pageContent === sentence //stops when return true
+        })
+
+        if (!isDuplicate) { //if there is NOT a duplicate
+            console.log("adding new vector")
+            newVectors.push(vector);
+            newSentences.push({
+                pageContent: sentence,
+                metadata: {},
+                id: id
+            })
+
+            newIds.push(id)
+        } else { //duplicate, skipping 
+            console.log("Duplicate found! : ", sentence)
+        }
+    }
+
+    if (newVectors.length > 0) { //add vectors if theres something to add
+        await vectorStore.addVectors(newVectors, newSentences, {
+            ids: newIds
+        })
+
+        console.log("New documents added to vector store!: ", newSentences)
+    } else{
+        console.log("Nothing new added to vector db")
+    }
+
+    const retriever = vectorStore.asRetriever()
     
-    // console.log(results)
 
+    // const results = await vectorStore.similaritySearch("biology", 3)
+    const results = await retriever.invoke("biology")
+    console.log(results)
 }
-
-// async function queryChroma(text) {
-//     const vectors = await vectorStore.embeddings
-// }
 
 module.exports = { createVector };
