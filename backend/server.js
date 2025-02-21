@@ -14,6 +14,10 @@ let chatHistory = [
         role: "system", // Admin
         content: "You are a AI chat bot that helps people with the website 'DataMonkey' the website is a bioinfomatics website."
     },
+    {
+        role: "system",
+        content: "If you do not know the answer say 'I don't know' "
+    }
     // { example
         // role: "user",
         // content: "hi"
@@ -35,7 +39,7 @@ app.post('/Ai/:UserMessage', async (req, res) => {
     try{
         const aiResponse = await getGroqChatCompletion(chatHistory)
         // const aiTextResponse = aiResponse.choices[0]?.message?.content || "" // get the first response from the AI
-        const aiTextResponse = aiResponse.content || "" // get the first response from the AI
+        const aiTextResponse = aiResponse.content || "" // get the response from the AI
         chatHistory.push({role: "assistant", content: aiTextResponse}) // adds ai response to chat history
         res.send(aiTextResponse)
     } catch(error) {

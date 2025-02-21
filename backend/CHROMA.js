@@ -4,9 +4,11 @@
 //ollama pull mxbai-embed-large
 
 const { Chroma } = require("@langchain/community/vectorstores/chroma")
-// const { pipeline } = require("@huggingface/transformers");
 const { OllamaEmbeddings } = require("@langchain/ollama")
+const { RecursiveCharacterTextSplitter } = require("langchain/text_splitter");
 
+const fs = require('fs') //file system
+const path = require('path')
 
 const embeddingModel = new OllamaEmbeddings({
     model: "mxbai-embed-large", // Default value
@@ -18,18 +20,32 @@ const vectorStore = new Chroma(embeddingModel, {
     url: "http://localhost:8000",
 })
 
+async function readandChunkFile( filePath, chunkSize, chunkOverlap ) {
+    // try{
+       
+        //get and read file
+        // const absolutePath = path.resolve(filePath)
+        const fileData = fs.readFileSync('./documents/doc1.txt', 'utf-8')
+        console.log("File content: ", fileData)
+        //Chunking File
+        const textSplitter = new RecursiveCharacterTextSplitter({
+            chunkSize: chunkSize, //The amount of characters we want to split the doc
+            chunkOverlap: chunkOverlap// the overlap between chunks in characters
+        })
+
+        const chunks = await textSplitter.splitText(fileData)
+        console.log("The chunks are: ", chunks)
+        //return Chunks
+        return chunks
+    // } catch (error) {
+    //     console.log("Couldn't read or chunk file")
+    // }
+}
+
 async function createVector(sentences) {
     // console.log("Hello")
     // const vector = await embeddingModel.embedQuery("This is a test")
     const vectors = await embeddingModel.embedDocuments(sentences)
-    // sentences.map((_, index) => `id_${index + 1}`), 
-    // await vectorStore.addVectors(vectors, sentences.map((sentence, index) => ({
-    //     pageContent: sentence,
-    //     metadata: {},
-    //     id: `id_${index + 1}`
-
-    // })))
-
 
     //Check for duplicate vectors
     const existingVectors = await vectorStore.similaritySearch("", 1000) //gets all documents in the database
@@ -72,12 +88,17 @@ async function createVector(sentences) {
         console.log("Nothing new added to vector db")
     }
 
-    const retriever = vectorStore.asRetriever()
-    
-
-    // const results = await vectorStore.similaritySearch("biology", 3)
-    const results = await retriever.invoke("biology")
-    console.log(results)
 }
 
-module.exports = { createVector };
+async function chromaSearch(context, nResults) {
+    const retriever = vectorStore.asRetriever({
+        k: nResults //how many results get printed out
+    })
+    const results = await retriever.invoke(context) //Searches Chroma for relevant info
+
+    console.log("The results of : ", results)
+
+    return results
+}
+
+module.exports = { createVector, chromaSearch, readandChunkFile };

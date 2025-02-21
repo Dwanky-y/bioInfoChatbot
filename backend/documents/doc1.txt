@@ -1,0 +1,15 @@
+Toy Name: Minh's Robot
+
+Description: Minh's Robot is an interactive toy designed to engage children in learning basic programming and robotics. It features a variety of sensors and motors, allowing it to move, detect obstacles, and respond to voice commands.
+
+Troubleshooting Problems:
+1. Problem: The robot does not turn on.
+    Solution: Ensure the batteries are properly installed and fully charged. Check the power switch and try resetting the robot.
+
+2. Problem: The robot is not responding to voice commands.
+    Solution: Make sure the microphone is not obstructed and that you are speaking clearly. Verify that the robot is in listening mode.
+
+3. Problem: The robot is not moving correctly.
+    Solution: Check for any obstacles blocking the robot's path. Ensure the wheels and motors are free of debris and functioning properly.
+
+History: This toy once exploded in a children's hospital causing the toy to be recalled and destroyed. The recall was on 1/15/2025
