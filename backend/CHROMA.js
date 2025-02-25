@@ -96,7 +96,8 @@ async function chromaSearch(context, nResults) {
     })
     const results = await retriever.invoke(context) //Searches Chroma for relevant info
 
-    console.log("The results of : ", results)
+    // console.log("The results of : ", results)
+    // console.log("Chroma Search Finished, Context: ", context)
 
     return results
 }

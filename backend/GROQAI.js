@@ -14,12 +14,33 @@ const GROQ = new ChatGroq({
     apiKey: process.env.GROQ_API_KEY
 })
 
+async function RAG(chatHistory, context) {
+    const promptTemplate =  `Please answer the question with the given context if applicable to the question!
+                        Context: "${context.map((item) => `"${item.pageContent}", `)}" 
+                        Question: ${chatHistory[chatHistory.length - 1].content}
+                        Chat History: ${chatHistory.map((item) => `"${item.role}: ${item.content}", `)}`
+
+    
+    return promptTemplate
+}
+
+
 // chromaSearch("Biology", 1)
 //filePath, chunkSize, chunkOverlap
-readandChunkFile("./documents/doc1.txt", 150, 50)
+
+async function addChunkedFileToChroma() {
+    const chunkedFile = await readandChunkFile("./documents/doc1.txt", 150, 50)
+    createVector(await chunkedFile)
+}
+
+// addChunkedFileToChroma()
 
 async function getGroqChatCompletion(chatHistory) {
-    return GROQ.invoke(chatHistory)
+    const context = await chromaSearch(chatHistory[chatHistory.length - 1].content, 3)
+    // console.log("Results: " , context)
+    const prompt = await RAG(chatHistory, context)
+    console.log("Prompt: ", prompt)
+    return GROQ.invoke(prompt)
 }
 
 module.exports = { getGroqChatCompletion };
