@@ -25,6 +25,7 @@ let chatHistory = [
 
 let chatHistory4Log = chatHistory.slice();
 
+let chatHistoryFileName = `chatlog_${new Date().toISOString().replace(/:/g, "_")}.json`;
 
 // Testing routes
 app.get('/', (req, res) => {
@@ -50,7 +51,7 @@ app.post('/Ai/:UserMessage', async (req, res) => {
         res.status(500).send("Can't get AI response")
     }
     const jsonString = JSON.stringify(chatHistory4Log, null, 2); // Convert array to JSON string with indentation
-    fs.writeFile(`chatlog_${new Date().toISOString().replace(/:/g, "_")}.json`, jsonString, { flag: 'a' }, (err) => {
+    fs.writeFile(chatHistoryFileName, jsonString, { flag: 'a' }, (err) => {
         if (err) {
         console.error("Error writing chatHistory:", err);
         } else {
