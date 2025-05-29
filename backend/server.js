@@ -51,7 +51,7 @@ app.post('/Ai/:UserMessage', async (req, res) => {
         res.status(500).send("Can't get AI response")
     }
     const jsonString = JSON.stringify(chatHistory4Log, null, 2); // Convert array to JSON string with indentation
-    fs.writeFile(chatHistoryFileName, jsonString, { flag: 'a' }, (err) => {
+    fs.writeFile(chatHistoryFileName, jsonString, (err) => {
         if (err) {
         console.error("Error writing chatHistory:", err);
         } else {
