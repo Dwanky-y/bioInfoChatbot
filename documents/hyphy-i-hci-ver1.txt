@@ -1,0 +1,287 @@
+## HyPhy: Unveiling Natural Selection through Computation
+
+<!-- *Last updated 2025-10-07* -->
+<!-- Authors: Hannah Kim, Sergei L. Kosakovsky Pond -->
+
+
+### I. Introduction
+
+#### A. Mutations
+Mutations. How does pop culture portray mutations? They can occur when a radioactive spider bites a person, or when some radioactive perturbation inherently changes "something" in a human (or even a turtle). What do mutations do in those contexts? The character gains a new superhuman ability. Why is that surprising? Well, the expectation is that a venomous spider bite should either kill a human or not kill them, certainly not make one superhuman. While the superhuman ability is celebrated, there is always something lonely about these new superheros because with power comes responsibility. What I am trying to get at is this: despite the celebration of superpowers, the word mutant itself is generally perceived negatively by people. 
+
+In biology, mutations happen very frequently, and are not necessarily good or bad--they are simply changes. As you can imagine from the spider-bite and radioactive perturbation examples, a mutation is a change that can give rise to a new function--or a superpower. Surely, being able to detect the bitterness in broccoli when a poisonous plant of a similar flavor is nearby would have been a superpower for someone who needed to forage for food. Mutation is the very mechanism that has made each of us unique. 
+
+What is the actual building block by which this mechanism works? It is DNA (**D**eoxyribo**n**ucleic **A**cids) and other molecules. DNA is a long sequence of smaller molecular units which get packed into spools. Once we get a huge collection of these spools, we get something called chromosomes--yes, the X and Y chromosomes that we often hear about, although there are many more chromosomes other than just X and Y. What is written in these sequences gets translated into the traits we have. When there is any change in these sequences, we say there is a **mutation**. These changes can happen spontaneously or environmentally. And, just like the pop culture depictions, these fragmented changes may give us superpowers, kill us, or not affect us at all.
+
+#### B. DNA and Its Context
+What is surprising about DNA is that these building blocks are universal. They are the same in rabbits, some viruses, fish, and ladybugs. In other words, bananas were built with the same types of building blocks that built us. Then one cannot help but wonder: what makes us different from bananas? What are the mechanisms and structures that make us humans and bananas bananas?
+
+As a field, biology is as big as the number of different kinds of organisms and ecological systems that exist. Surely, many of us are inspired by human applications of biology in medicine, and one of the biggest areas is cancer research. However, there is much more. How does the COVID-19 virus evolve in a new host? How do jumping genes influence crop diversity? How can we identify the mechanism of the gene editing system in bacteria? The list goes on. In short, while biology has shared foundational building blocks, the mechanisms by which it works vary widely and are highly contextual. Since it is not easy to even scratch the surface of the field as a whole, the sheer volume of requisite knowledge often makes it a memorization-intensive discipline; one cannot possibly acquire all knowledge through direct experience. However, once one has learned enough about the field, its potential is as vast as nature itself--so that is the tradeoff.
+
+#### C. Bioinformatics, HyPhy, and Its Inputs
+In bioinformatics, our goal is to build models that can best explain what is happening in biology. With HyPhy (**Hy**pothesis Testing using **Phy**logenies) software, we can computationally analyze natural selection from DNA sequences. What that means is that we follow a roughly six-step workflow consisting of (1) sample collection, (2) DNA sequencing, (3) multiple sequence alignment, (4) phylogenetic tree construction, (5) HyPhy analysis, and (6) validation. 
+
+##### 1. We collect samples of organisms of interest, assuming that each is the representative of its population. 
+##### 2. Sequencing DNA is a multi-step, Herculean process, which can be simplified into: 
+1. Reading DNA fragments that have been cut into certain fixed lengths.
+2. Aligning those fragments to a reference sequence for that organism to determine their location (like solving a puzzle) and reconstructing the sample sequence.
+3. Repeating the process for every sample.
+    
+##### 3. Once we have the DNA sequences from the samples, we do a <u>multiple sequence alignment (MSA)</u> so that we can compare DNA positions inherited from a common ancestor.
+- The following is the position-aligned DNA sequences of beta-globin: 
+```
+'elephseal'  TTGACGGCGGAGGAGAAGTCTGCCGTCACCTCCCTGTGGGGCAAAGTGAAGGTGGATGAAGTTGGTGGTGAAGCCCTGGGCAGGCTGCTGGTTGTCTACCCCTGGACTCAGAGGTTCTTTGACTCCTTTGGGGACCTGTCCTCTCCTAATGCTATTATGAGCAACCCCAAGGTCAAGGCCCATGGCAAGAAGGTGCTGAATTCCTTTAGTGATGGCCTGAAGAATCTGGACAACCTCAAGGGCACCTTTGCTAAGCTCAGTGAGCTGCACTGTGACCAGCTGCATGTGGATCCCGAGAACTTCAAGCTCCTGGGCAATGTGCTGGTGTGTGTGCTGGCCCGCCACTTTGGCAAGGAATTCACCCCACAGATGCAGGGTGCCTTTCAGAAGGTGGTAGCTGGTGTGGCCAATGCCCTCGCCCACAAATATCAC
+'pig'        CTGTCTGCTGAGGAGAAGGAGGCCGTCCTCGGCCTGTGGGGCAAAGTGAATGTGGACGAAGTTGGTGGTGAGGCCCTGGGCAGGCTGCTGGTTGTCTACCCCTGGACTCAGAGGTTCTTCGAGTCCTTTGGGGACCTGTCCAATGCCGATGCCGTCATGGGCAATCCCAAGGTGAAGGCCCACGGCAAGAAGGTGCTCCAGTCCTTCAGTGACGGCCTGAAACATCTCGACAACCTCAAGGGCACCTTTGCTAAGCTGAGCGAGCTGCACTGTGACCAGCTGCACGTGGATCCTGAGAACTTCAGGCTCCTGGGCAACGTGATAGTGGTTGTTCTGGCTCGCCGCCTTGGCCATGACTTCAACCCGAATGTGCAGGCTGCTTTTCAGAAGGTGGTGGCTGGTGTTGCTAATGCCCTGGCCCACAAGTACCAC
+'cow'        CTGACTGCTGAGGAGAAGGCTGCCGTCACCGCCTTTTGGGGCAAGGTGAAAGTGGATGAAGTTGGTGGTGAGGCCCTGGGCAGGCTGCTGGTTGTCTACCCCTGGACTCAGAGGTTCTTTGAGTCCTTTGGGGACTTGTCCACTGCTGATGCTGTTATGAACAACCCTAAGGTGAAGGCCCATGGCAAGAAGGTGCTAGATTCCTTTAGTAATGGCATGAAGCATCTCGATGACCTCAAGGGCACCTTTGCTGCGCTGAGTGAGCTGCACTGTGATAAGCTGCATGTGGATCCTGAGAACTTCAAGCTCCTGGGCAACGTGCTAGTGGTTGTGCTGGCTCGCAATTTTGGCAAGGAATTCACCCCGGTGCTGCAGGCTGACTTTCAGAAGGTGGTGGCTGGTGTGGCCAATGCCCTGGCCCACAGATATCAT
+'sheep'      CTGACTGCTGAGGAGAAGGCTGCCGTCACCGGCTTCTGGGGCAAGGTGAAAGTGGATGAAGTTGGTGCTGAGGCCCTGGGCAGGCTGCTGGTTGTCTACCCCTGGACTCAGAGGTTCTTTGAGCACTTTGGGGACTTGTCCAATGCTGATGCTGTTATGAACAACCCTAAGGTGAAGGCCCATGGCAAGAAGGTGCTAGACTCCTTTAGTAACGGCATGAAGCATCTCGATGACCTCAAGGGCACCTTTGCTCAGCTGAGTGAGCTGCACTGTGATAAGCTGCACGTGGATCCTGAGAACTTCAGGCTCCTGGGCAACGTGCTGGTGGTTGTGCTGGCTCGCCACCATGGCAATGAATTCACCCCGGTGCTGCAGGCTGACTTTCAGAAGGTGGTGGCTGGTGTTGCCAATGCCCTGGCCCACAAATATCAC
+```
+##### 4. An alignment can be most effectively studied using a <u>tree, called a phylogeny,</u> so we build one for the MSA. 
+- Here is a toy example of a tree: `(elephseal,(pig,(cow,sheep)))`.
+- Note on internal nodes: Each leaf of the tree corresponds to one of our sequences, and each edge (branch) represents the distance from an ancestor to a descendant. Each internal node represents a fictitious--but most likely--sequence from which the two directly descending  sequences came from. This hypothetical sequence is called the **common ancestor**. This sequence might exist in our samples, but it may also have existed in the past and is no longer accessible. However, because we know that only a small number of sequence changes (mutations) would be required for such an ancestral sequence to exist, we can logically infer its presence. The branch lengths in this tree represent the evolutionary distance between the ancestral sequence and the descendant sequences. The simplest such distance is the fraction of positions which mutated. A tree with branch lengths may look something like this: `(A:0.2,(B:0.3,(C:0.1,D:0.1):0.2):0.1)`. Note that this tree has a structure identical to the toy example.
+
+##### 5. <u>Now that you have a MSA and a tree in hand, we are ready to run HyPhy</u>. Which HyPhy method should we use for our hypothesis?
+
+##### 6. If there are signals of natural selection in our data, we interpret our results by doing literature search on that particular biological environment. We may need to do further experiments to validate the findings.
+
+The steps above are a gross simplification since most of them require multiple experimental and computational methods. You may wish to revisit them in more detail later. In short, HyPhy provides a suite of methods that can be used in the downstream of a larger workflow. This illustrates how bioinformatics is inherently interdisciplinary as a field. In the following sections, we will discuss how we can run step 5.
+
+---------------
+### II. HyPhy Command Line Installation
+
+#### A. Option 1: Install using `conda`
+
+1. Follow the steps in the following documentation to install `conda` if you do not already have one installed: https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html. 
+2. Install `HyPhy`. You can check available versions here: https://anaconda.org/bioconda/hyphy/.
+```
+conda install -c bioconda hyphy
+hyphy --version
+```
+
+#### B. Option 2: Install using `Docker`
+
+1. Follow the steps in the following documentation to install `git` if you do not already have one installed: https://github.com/git-guides/install-git.
+2. Follow the steps in the following documentation to install `Docker` if you do not already have one installed: https://www.docker.com/get-started/. 
+3. Make sure the `Docker` is running in the background.
+4. Install `HyPhy`. You can check which version you are installing here below *Releases*: https://github.com/veg/hyphy/tree/master. 
+```
+git clone https://github.com/veg/hyphy.git
+cd hyphy
+docker build -t hyphy:latest .
+docker run --rm -v <path/to/your/input/data>:/hyphy/data -it hyphy:latest
+hyphy --version
+```
+
+---------------
+### III. Running HyPhy Software
+
+#### A. Check available methods with `hyphy --help`, then run the method of interest
+
+```
+hyphy --help
+```
+**output:**
+```
+Available standard keyword analyses
+	...
+	fel 	[FEL] Test for pervasive site-level selection using FEL (Fixed Effects Likelihood).
+	...
+	busted 	[BUSTED] Test for episodic gene-wide selection using BUSTED (Branch-site Unrestricted Statistical Test of Episodic Diversification).
+	...
+	absrel 	[aBSREL] Test for lineage-specific evolution using the branch-site method aBS-REL (Adaptive Branch-Site Random Effects Likelihood).
+    ...
+```
+```
+hyphy <method> --alignment <path/to/alignment/file> <additional_method_specific_arguments>
+```
+
+#### B. Check arguments for each method with `hyphy <method> --help`
+```
+hyphy fel --help
+```
+**output:**
+``` 
+Available analysis command line options
+---------------------------------------
+Use --option VALUE syntax to invoke
+If a [required] option is not provided on the command line, the analysis will prompt for its value
+[conditionally required] options may or not be required based on the values of other options
+
+...
+
+alignment [required]
+	An in-frame codon alignment in one of the formats supported by HyPhy
+
+tree [conditionally required]
+	A phylogenetic tree (optionally annotated with {})
+	applies to: Please select a tree file for the data:
+...
+```
+
+#### C. Required Input
+HyPhy accepts `FASTA`, `NEXUS`, `Phylip`, or `MEGA` file containing a codon (to be explained in the following section)-aware multiple-sequence alignment and a phylogenetic tree as an input. If the alignment file does not contain a tree, then it can be provided separately with `--tree` argument. If a tree is included with the alignment file, you should be able to find one towards the end of the file. Examples of HyPhy-ready files for `--alignment` argument can be found here: https://github.com/veg/hyphy/tree/master/tests/data. See [Section I.C.3](#C-Bioinformatics-HyPhy-and-Its-Inputs) for details.
+
+---------------
+
+### IV. Choosing a HyPhy Method
+
+#### A. Selection as a Biological Process
+Let me step back a little to explain what selection means in biology. Selection is a process in which an individual survives and potentially thrives because of a certain trait. Over time, this results in many individuals in the population carrying that same trait in that environment. For example, imagine an environment where a poisonous plant tastes like a bitter broccoli, and the only safe alternative food source is a similar-looking, non-toxic plant. Then, individuals without the ability to sharply detect broccoli bitterness would die from ingesting high doses of the toxin. If the ability to taste that bitterness is hereditary, only those with the trait would reproduce and pass it on to their offspring. Eventually, being able to taste the broccoli bitterness would almost be a requirement for survival and more individuals with that trait would be found in that population. Of course, this is an extreme example—humans share knowledge and warn one another, so not everyone in the population needs the trait to survive. Regardless, the premise is this: if there is a selective pressure, it will influence the frequency at which a trait appears in the population.
+
+Based on this observation in nature, we can build a mathematical explanation, a **model**, to figure out which parts of the DNA are actively changing or conserved, and therefore under selection. Here is where the concept of selection in DNA gets tricky. In reality, we almost never observe selection directly and must deduce what (if anything) it did based on the molecular traces it leaves behind. The molecular traces are patterns in the DNA alignment which we can study using computational methods.
+
+Simply put, DNA is how nature stores information in a secure format. The actual molecules that function and give rise to traits are **proteins** (generally speaking). Because DNA is so securely kept, it actually needs to be first transcribed into something called RNA, which is less stable but easy to access, before it can be translated into proteins. For the modeling purposes, think of DNA as having units that can be eventually translated into units of proteins. These units are called **codons**, which comes in groups of three molecules (e.g., "ATG" and "AAA"). The molecules that make up codons are called nucleotides ("A", "C", "G" or "T"). Not all that is written in DNA becomes proteins, nor does any random section of the DNA becomes proteins, so we call the sections that do **genes**, or more precisely, protein-coding genes. There are 61 codons that can lead to 20 basic units of proteins called **amino acids** (e.g., methionine ("M") and lysine ("K")). Since four nucleotides in groups of three give $4 × 4 × 4 = 64$ possible codons, this means 61 map onto just 20 amino acids, while the remaining three serve as stop signals to mark the end of a protein. Isn't that strange? The math is not mathing here.
+
+Sixty-one codons map onto 20 amino acids because different amino acids are encoded by different numbers of codons. For example, methionine is encoded by just one codon ("ATG"), lysine by two ("AAA" and "AAG"), and threonine by four ("ACA," "ACT," "ACG," and "ACC"). This means that if the "T" in "ATG" is mutated to "A," the codon would now encode lysine instead of methionine. In contrast, a mutation in the third position of the codon "AC_" will have no effect on the resulting amino acid (threonine). A point mutation that *changes* the resulting amino acid is called a **nonsynonymous** mutation, whereas one that *does not* change the resulting amino acid is called a **synonymous** mutation. A random mutation is about 3 times more likely to be nonsynonymous than synonymous. Biologists are still debating how this distinction came about at the dawn of life.
+
+What is interesting about selection is that the constraints on protein molecules are as important as those on DNA. A nonsynonymous mutation in DNA that changes the resulting protein sequence may occur, but that does not mean all possible changes will be observed by us in reality. Some changes in DNA are lethal because they disrupt how amino acids interact, preventing the protein from folding properly and remaining intact. Other changes that are not lethal to the protein itself may reduce its effectiveness or render it completely ineffective, thereby compromising the system in which it operates. Still other changes, while not lethal to the protein or system, may reduce the organism’s fitness in its environment and ultimately lead to its death, as in the broccoli bitterness example. In the following sections, we will focus on selection at the DNA level. While we do not always have complete information about the organism or its environment, examining DNA sequences is important because it can provide valuable clues about what may have happened to the larger systems.
+
+
+#### B. What Selection Looks Like on Paper
+ 
+The core idea of selection in DNA is to compare the rate of nonsynomymous and synonymous mutations. We call this ratio dN/dS or omega (ω).
+
+- If ω>1, it suggests nonsynonymous changes are happening faster than expected by chance. This is a sign of **positive** selection (or diversifying selection), where change is being favored.
+- If ω<1, it suggests nonsynonymous changes are being removed. This is a sign of **negative** selection (or purifying selection), where the original function is being preserved.
+- If ω~1 (we cannot tell that it is different from 1), we assume that selection did not operate: you had what is called **neutral** evolution. 
+
+You can think of it like analyzing different versions of a software program. Positive selection is like actively rewriting lines of code to add new features, while negative selection is like carefully preventing any changes to a critical, stable function. In both cases, not rewriting or preventing changes will make the program less likely to be successful. If you find one version to be intact, actually useful and popular among users to the point that it is found on most people's computer, you can call that version to be selected.
+
+HyPhy offers different specialized methods to ask different questions about where and when this selection might be happening. In this tutorial, we will look at three of the most common ones.
+
+#### C. Three HyPhy Selection Methods with Different Scopes
+
+If we have a multiple sequence alignment (MSA) and a phylogenetic tree, which HyPhy method should we use to detect selection? The first step is to consider the expected output of your hypothesis. In this tutorial, we focus on three methods—FEL, aBSREL, and BUSTED from [Section III.A](#III-Running-HyPhy-Software)—that can examine the same data at different  scopes. Let’s revisit the MSA example from [Section I.C.3](#C-Bioinformatics-HyPhy-and-Its-Inputs). 
+
+- With **FEL**, we are looking at which column (or site) is showing the signal of selection in that alignment. 
+- With **aBSREL**, we are looking at which row (or sample) or even the ancestral sequences of those rows are under selection. 
+- Note that we have been looking at DNA sequences for beta-globin, which is a protein subunit for hemoglobin that transports oxygen in red blood cells. With **BUSTED**, we examine whether there are any signals of selection across the entire MSA (or gene). BUSTED would be particularly useful if we have many proteins (and their corresponding MSA files) and want to determine which of those proteins are under selection within that given group of samples.
+
+In the next section, we will discuss each method and its output in detail.
+
+---------------
+
+### V. HyPhy Methods and Their Output
+
+Running HyPhy methods will output a lot of numbers, but the most important one to look out for is the **p-value**. A p-value is a measure of surprise. It can answer whether there is a statistically important signal of selection or not. How likely is it for us to see a pattern just by random chance? A small p-value (generally less than 0.05) in the output means there is likely a selection, or as statisticians like to say: it is very surprising if there is no selection with this tiny number. With a small p-value, we can be more confident that a real biological selection is at play.
+
+#### A. FEL: Finding the Specific Sites Under Pervasive Selection
+
+What question does FEL (Fixed Effects Likelihood) answer? It can tell us whether there are any specific codons (sites) in the alignment that have been consistently under positive or negative selection across the all samples.
+
+The keyword here is pervasive. FEL assumes that the evolutionary pressure on any given position is the same across all existing and ancestral sequences (all branches of the tree). It goes through our alignment in a codon-by-codon manner and tests whether ω is significantly greater or less than 1. Again, we interpret these numbers to be signals of positive or negative selection. 
+
+In the analogy of software development, FEL is like a code profiler that examines every single line of your program across all its versions to identify which specific lines have been consistently and actively rewritten or rigorously protected from change. To reiterate that sentence in biology, FEL is a software program that examines every single site of your aligned samples to identify which specific positions have been consistently and actively changing (positive selection) or rigorously protected from change (negative selection).
+
+Here is how you would run FEL using the default setting:
+
+```
+hyphy fel --alignment tests/data/bglobin.nex
+```
+
+##### FEL output
+
+A FEL output would something like below. The columns that you would be most interested are `Codon` and `Selection detected?`. The output lists specific sites (e.g., codon 2, codon 11) that show evidence of negative or positive selection along with a p-value to tell you how confident you can be. With the default FEL setting, we are being a bit generous with our p-value cutoff at 0.1. For the beta-globin example below, there are a total of 80 sites that are under selection, with 78 of them potentially going through negative selection and 2 of them going through positive selection.
+
+```
+...
+|     Codon      |   Partition    |     alpha      |      beta      |      LRT       |Selection detected?|
+|:--------------:|:--------------:|:--------------:|:--------------:|:--------------:|:-----------------:|
+|       2        |       1        |        0.886   |        0.136   |        4.635   |  Neg. p = 0.0313  |
+|       4        |       1        |       13.316   |        0.162   |        4.344   |  Neg. p = 0.0371  |
+|       5        |       1        |        1.473   |        0.000   |        5.932   |  Neg. p = 0.0149  |
+|       99       |       1        |        1.473   |        0.000   |        5.932   |  Neg. p = 0.0149  |
+|       6        |       1        |        1.473   |        0.000   |        6.388   |  Neg. p = 0.0115  |
+|       9        |       1        |        1.784   |        0.084   |        8.391   |  Neg. p = 0.0038  |
+|       11       |       1        |        0.220   |        1.209   |        3.276   |  Pos. p = 0.0703  |
+
+...
+
+Found _2_ sites under pervasive positive diversifying and _78_ sites under negative selection at p <= 0.1
+```
+
+#### B. aBSREL: Identifying the Specific Branches Under Selection
+
+FEL told us about where selection operated, but it didn't tell us much about what is happening in each sample or its ancestors. For that, we turn to: aBSREL (adaptive Branch-Site Random Effects Likelihood). 
+
+aBSREL can tell us which specific branches on the tree show evidence of having sites under positive selection. It tests each and every branch (our input samples and their ficitious ancestors) on the phylogeny to see if it can find a statistically significant signal of adaptive evolution. This is incredibly powerful for pinpointing branches that underwent adaptation in their environments.
+
+In another software development anology, aBSREL is the tool that scans your version control history (like `git blame`) to identify the exact development branches where bursts of code optimization took place. In the language of biology, aBSREL is the tool that scans through each sample (and/or ancestor) to identify which of them has sites with significant signals of positive selection.
+
+Here is how you would run aBSREL using the default setting:
+
+```
+hyphy absrel --alignment tests/data/bglobin.nex
+```
+
+##### aBSREL output 
+
+Below is an example of an aBSREL output. In your beta-globin file, there were 17 samples, but a total of 31 branches including those for 14 ancestral sequences, not including the root sequence. Because a branch is an edge representing the distance between a sample and its immediate ancestor, its presence can simply be represented by the name of the descendant node. Note that the numbers assigned to the ancestral sequences (internal nodes) in the output are algorithmic artefacts. The information that you would be interested is in the list of branches.
+
+Using the aBSREL default p-value cutoff of 0.05, you can get three specific branches that show evidence for positive selection along with their corrected p-values. Beta-globin proteins of two ancestors (Node15 and Node18) and SHEEP must have undergone some type of diversifying positive selection in response to changes in their environments!
+
+```
+...
+>code => Universal
+>Loaded a multiple sequence alignment with **17** sequences, **144** codons, and **1** partitions from `tests/data/bglobin.nex`
+>branches => All
+...
+
+### * Selected 31 branches for testing: `ELEPHSEAL, PIG, COW, SHEEP, Node6, Node4, Node2, BUSHBABY, HARE, RABBIT, Node12, Node10, HUMAN, TARSIER, Node15, Node9, Node1, HAMSTER, RAT, MOUSE, Node20, Node18, MARSUPIAL, DUCK, CHICKEN, Node26, XENLAEV, XENTROP, Node29, Node25, Node23`
+
+ ...
+ 
+ ### Adaptive branch site random effects likelihood test 
+Likelihood ratio test for episodic diversifying positive selection at Holm-Bonferroni corrected _p =   0.0500_ found **3** branches under selection among **31** tested.
+
+* Node15, p-value =  0.00526
+* Node18, p-value =  0.00776
+* SHEEP, p-value =  0.04430
+ ```
+ 
+ ##### Additional details you would get from the file generated with `--output` argument
+ ```
+ ...
+  "input":{
+   "file name":"/home/hannahkimincompbio/hyphy-devbranch/tests/data/bglobin.nex",
+   "number of sequences":17,
+   "number of sites":144,
+   "partition count":1,
+   "trees":{
+     "0":"(((ELEPHSEAL,(PIG,(COW,SHEEP)Node6)Node4)Node2,((BUSHBABY,(HARE,RABBIT)Node12)Node10,(HUMAN,TARSIER)Node15)Node9)Node1,(HAMSTER,(RAT,MOUSE)Node20)Node18,(MARSUPIAL,((DUCK,CHICKEN)Node26,(XENLAEV,XENTROP)Node29)Node25)Node23)"
+    }
+  },
+ ...
+ ```
+
+#### C. BUSTED: Detecting Gene-Wide Episodic Selection
+
+Selection detected by FEL is pervasive because it is found in specific sites of all samples, but selection detected by aBSREL and BUSTED is episodic because it is measured in only subset of samples (and/or their ancestors). If we want to understand whether there was a short, intense burst of adaptation anywhere in the past, we use BUSTED (Branch-site Unrestricted Statistical Test for Episodic Diversification) to answer our question.
+
+BUSTED is looking for evidence of positive selection on at least some sites on at least some branches--hence, looking for episodic pressure--in the particular alignment file. This is a method for situations where you are expecting to see a flurry of temporary adaptive changes in multiple samples due to some major environmental events.
+
+Again, in our software development anology, running BUSTED is like running a diagnostic that checks the entire history of your software project to answer whether there was ever a period, in any development branch, where a push for rapid feature enhancement occurred. It won't tell you exactly which lines were changed or when, but it will detect the signal of that event. In a way, BUSTED is telling you whether an event requiring optimization has happened in the project history. Swap the word "project" in the last sentence with "evolutionary" for a biological iteration of the concept.
+
+Here is how you would run BUSTED using the default setting:
+```
+hyphy % hyphy busted --alignment tests/data/bglobin.nex
+```
+
+##### BUSTED output
+
+The output of BUSTED looks very simple: a single p-value for the entire alignment. If this p-value is significant, this gene's evolutionary history include at least one episode of positive selection. It gives you a "yes" or "no" answer to the question of whether gene-wide episodic adaptation occurred. We have been looking at the alignment of beta-globin protein-coding genes throughout this tutorial. Based on our output below, the answer is a strong "YES", we observe the evidence of positively selecting episodes in beta-globin, whether we use the p-value cutoff of 0.1 or 0.05. 
+
+```
+...
+
+## Branch-site unrestricted statistical test of episodic diversification [BUSTED]
+Likelihood ratio test for episodic diversifying positive selection, **p =   0.0000**.
+```
+
+
+### VI. Closing
+
+Context is king! Statistical significance is just the first step. You have to ask if the output of HyPhy makes biological sense. For example: finding positive selection in a viral protein that interacts with the host immune system is biologically plausible and exciting, but finding it in a housekeeping gene known to be highly conserved might be a statistical noise. Science is an art as well as a, well, science!
+
+Also remember that these models are also based on assumptions, and the quality of your MSA and tree is critical. Garbage in, garbage out. Always treat your results as strong hypotheses that need to be interpreted in the light of biology.
+
+
